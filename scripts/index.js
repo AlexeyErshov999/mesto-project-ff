@@ -8,6 +8,12 @@
 
 // @todo: Вывести карточки на страницу
 
+
+const cardDelete = evt => {
+  let actionTarget = evt.target.closest('.places__item');
+  actionTarget.remove();
+}
+
 const cardsTemplate = document.querySelector('#card-template').content;
 const cardsList = document.querySelector('.places__list');
 
@@ -26,11 +32,6 @@ const addCard = (link, name, cardDelete) => {
   });
 
   return card;
-}
-
-const cardDelete = evt => {
-  let actionTarget = evt.target.closest('.places__item');
-  actionTarget.remove();
 }
 
 initialCards.forEach((card) => {
