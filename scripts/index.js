@@ -33,10 +33,6 @@ const cardDelete = evt => {
   actionTarget.remove();
 }
 
-for (let i = 0; i < initialCards.length; i++) {
-  cardsList.append(addCard(initialCards[i].link, initialCards[i].name, cardDelete));
-}
-
-// initialCards.forEach(function(initialCards){
-//   cardsList.append(addCard(cardDelete, initialCards[i].link, initialCards[i].name));
-// });
+initialCards.forEach((card) => {
+  cardsList.append(addCard(card.link, card.name, cardDelete));
+});
