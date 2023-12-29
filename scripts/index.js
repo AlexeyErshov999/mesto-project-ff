@@ -1,17 +1,7 @@
-// @todo: Темплейт карточки
-
-// @todo: DOM узлы
-
-// @todo: Функция создания карточки
-
-// @todo: Функция удаления карточки
-
-// @todo: Вывести карточки на страницу
-
-const deleteCard = evt => {
+function deleteCard(evt) {
   const actionTarget = evt.target.closest('.places__item');
   actionTarget.remove();
-}
+};
 
 const cardsTemplate = document.querySelector('#card-template').content;
 const cardsList = document.querySelector('.places__list');
@@ -22,7 +12,6 @@ const createCard = (link, name, deleteCard) => {
 
   const cardImage = card.querySelector('.card__image');
   cardImage.src = link;
-  // добавление alt
   cardImage.alt = name;
 
   const cardTitle = card.querySelector('.card__title');
@@ -33,7 +22,7 @@ const createCard = (link, name, deleteCard) => {
   });
 
   return card;
-}
+};
 
 initialCards.forEach((card) => {
   cardsList.append(createCard(card.link, card.name, deleteCard));
@@ -44,6 +33,10 @@ const editProfilePopup = document.querySelector('.popup_type_edit');
 const createNewCardPopup = document.querySelector('.popup_type_new-card');
 const imagePopup = document.querySelector('.popup_type_image');
 
+/* searching image popup fields*/
+let imagePopupPicture = document.querySelector('.popup__image');
+let imagePopupDescription = document.querySelector('.popup__caption');
+
 /* open popup function */
 const openPopup = evt => {
   if (evt.target.classList.contains('profile__edit-button')) {
@@ -53,11 +46,12 @@ const openPopup = evt => {
     createNewCardPopup.classList.add('popup_is-opened');
   }
   if (evt.target.classList.contains('card__image')) {
+    // console.log(evt.name);
     imagePopup.classList.add('popup_is-opened');
+    // imagePopupPicture = evt.src;
+    // imagePopupDescription = evt.textContent;
   }
 };
-
-document.addEventListener('click', openPopup);
 
 /* close popup function */
 const closePopup = () => {
@@ -65,18 +59,6 @@ const closePopup = () => {
     createNewCardPopup.classList.remove('popup_is-opened');
     editProfilePopup.classList.remove('popup_is-opened');
 }
-
-document.addEventListener('click', function(evt) {
-  if (evt.target.classList.contains('popup__close')) {
-    closePopup();
-  }
-});
-
-document.addEventListener('keypress', function(evt) {
-  if (evt.key === '1') {
-    closePopup();
-  }
-}); /* CHECK !!! */
 
 /* information in profile popup */
 /* searching profile form and profile form fields */
@@ -120,6 +102,11 @@ function profileEditFormSubmit(evt) {
   closePopup();
 }
 
+// function openImagePopup(evt) {
+//   imagePopupPicture.src = evt.link;
+
+// }
+
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 formElement.addEventListener('submit', profileEditFormSubmit); 
@@ -127,16 +114,19 @@ formElement.addEventListener('submit', profileEditFormSubmit);
 /* creating a new card and adding it to front */
 const creatingNewCardForm = document.forms['new-place'];
 
-const newPlaceNameField = creatingNewCardForm['place-name'];
-const newPlaceImageLinkField = creatingNewCardForm['link'];
-
-function creatingNewCardFormSubmit(evt) {
+function creatingNewCardFormSubmit(evt, likeCard) {
   evt.preventDefault();
+
+  const newPlaceNameField = creatingNewCardForm['place-name'];
+  const newPlaceImageLinkField = creatingNewCardForm['link'];
 
   let enteredPlaceName = newPlaceNameField.value;
   let enteredImageLink = newPlaceImageLinkField.value;
 
   cardsList.prepend(createCard(enteredImageLink, enteredPlaceName, deleteCard));
+
+  newPlaceNameField.value = '';
+  newPlaceImageLinkField.value = '';
 
   closePopup();
 }
@@ -144,3 +134,30 @@ function creatingNewCardFormSubmit(evt) {
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 creatingNewCardForm.addEventListener('submit', creatingNewCardFormSubmit);
+
+/* like card function */
+const likeButton = document.querySelector('.card__like-button');
+
+const likeCard = evt => {
+  if (evt.target.classList.contains('card__like-button')) {
+    evt.target.classList.toggle('card__like-button_is-active');
+  }
+};
+
+/* listeners */
+
+document.addEventListener('click', openPopup);
+
+document.addEventListener('click', function(evt) {
+  if (evt.target.classList.contains('popup__close')) {
+    closePopup();
+  }
+});
+
+document.addEventListener('keypress', function(evt) {
+  if (evt.key === '1') {
+    closePopup();
+  }
+});/* CHECK!!! */
+
+document.addEventListener('click', likeCard);
