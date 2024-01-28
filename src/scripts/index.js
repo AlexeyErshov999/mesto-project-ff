@@ -1,7 +1,12 @@
 import "../pages/index.css";
-import { initialCards  } from "./cards.js";
+import { initialCards } from "./cards.js";
 import { deleteCard, createCard, createNewCard, likeCard } from "./card.js";
-import { openPopup, closePopup, closePopupByEsc, closePopupByButton } from "./modal.js";
+import {
+  openPopup,
+  closePopup,
+  closePopupByEsc,
+  closePopupByButton,
+} from "./modal.js";
 
 // SEARCHING REQUIRED OBJECTS
 export const cardsList = document.querySelector(".places__list");
@@ -39,7 +44,7 @@ function handleFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = editFormName.value;
   profileDescription.textContent = editFormDescription.value;
-  closePopup()
+  closePopup();
 }
 
 // LISTENERS
