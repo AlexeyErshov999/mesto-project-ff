@@ -25,8 +25,9 @@ export function createNewCard(evt, likeCard, openPopup) {
   objects.cardsList.prepend(
     createCard(objects.addFormLink.value, objects.addFormName.value, deleteCard)
   );
-  objects.addFormLink.value = objects.addFormName.value = "";
-  closePopup();
+  // objects.addFormLink.value = objects.addFormName.value = "";
+  closePopup(addPopup);
+  objects.addForm.reset();
 }
 
 export function likeCard(evt) {

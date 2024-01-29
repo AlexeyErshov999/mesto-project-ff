@@ -15,7 +15,7 @@ export const editPopup = document.querySelector(".popup_type_edit");
 export const addPopup = document.querySelector(".popup_type_new-card");
 export const editButton = document.querySelector(".profile__edit-button");
 export const addButton = document.querySelector(".profile__add-button");
-export const closeButton = document.querySelector(".popup__close");
+export const closeButtons = document.querySelectorAll(".popup__close");
 export const profileTitle = document.querySelector(".profile__title");
 export const profileDescription = document.querySelector(
   ".profile__description"
@@ -35,22 +35,28 @@ initialCards.forEach((card) => {
   cardsList.append(createCard(card.link, card.name, deleteCard));
 });
 
-// INITIAL INFORMATION IN EDIT FORM
-editFormName.value = profileTitle.textContent;
-editFormDescription.value = profileDescription.textContent;
-
 // SUBMIT EDIT FORM
 function handleFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = editFormName.value;
   profileDescription.textContent = editFormDescription.value;
-  closePopup();
+  closePopup(editPopup);
 }
 
 // LISTENERS
-document.addEventListener("click", openPopup);
-document.addEventListener("keydown", closePopupByEsc);
-document.addEventListener("click", closePopupByButton);
+editButton.addEventListener("click", function() {
+  openPopup(editPopup);
+  editFormName.value = profileTitle.textContent;
+  editFormDescription.value = profileDescription.textContent;
+  document.addEventListener("keydown", closePopupByEsc);
+});
+addButton.addEventListener("click", function() {
+  openPopup(addPopup);
+  document.addEventListener("keydown", closePopupByEsc);
+});
+closeButtons.forEach(item => {
+  item.addEventListener('click', closePopup);
+})
 document.addEventListener("click", likeCard);
 editForm.addEventListener("submit", handleFormSubmit);
 addForm.addEventListener("submit", createNewCard);
