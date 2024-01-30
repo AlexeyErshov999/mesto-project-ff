@@ -13,6 +13,7 @@ export function handleImageClick(evt) {
   objects.imagePopupPicture.src = evt.target.src;
   objects.imagePopupCaption.textContent = objects.imagePopupPicture.alt =
     evt.target.alt;
+  openPopup(objects.imagePopup);
 }
 
 export function createCard(link, name, deleteCard, likeCard, handleImageClick) {
@@ -25,17 +26,9 @@ export function createCard(link, name, deleteCard, likeCard, handleImageClick) {
   const cardTitle = card.querySelector(".card__title");
   cardImage.src = link;
   cardImage.alt = cardTitle.textContent = name;
-  cardImage.addEventListener("click", function (evt) {
-    handleImageClick(evt);
-    openPopup(objects.imagePopup);
-    document.addEventListener("keydown", closePopupByEsc);
-  });
-  cardLikeButton.addEventListener("click", function (evt) {
-    likeCard(evt);
-  });
-  deleteButton.addEventListener("click", function (evt) {
-    deleteCard(evt);
-  });
+  cardImage.addEventListener("click", handleImageClick);
+  cardLikeButton.addEventListener("click", likeCard);
+  deleteButton.addEventListener("click", deleteCard);
   return card;
 }
 

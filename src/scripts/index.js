@@ -52,18 +52,15 @@ editButton.addEventListener("click", function () {
   profileFormName.value = profileTitle.textContent;
   profileFormDescription.value = profileDescription.textContent;
   openPopup(editPopup);
-  document.addEventListener("keydown", closePopupByEsc);
 });
 addButton.addEventListener("click", function () {
   openPopup(addPopup);
-  document.addEventListener("keydown", closePopupByEsc);
 });
 popups.forEach((popup) => {
   popup.addEventListener("mousedown", (evt) => {
     if (evt.target.classList.contains("popup_is-opened")) closePopup();
     if (evt.target.classList.contains("popup__close")) closePopup();
   });
-  document.removeEventListener("keydown", closePopupByEsc);
 });
 profileForm.addEventListener("submit", handleProfileFormSubmit);
 addCardForm.addEventListener("submit", createNewCard);
