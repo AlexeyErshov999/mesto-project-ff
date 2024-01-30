@@ -1,36 +1,55 @@
 import * as objects from "./index.js";
-import { closePopup } from "./modal.js";
+import { closePopup, closePopupByEsc, openPopup } from "./modal.js";
 
 export function deleteCard(evt) {
   evt.target.closest(".places__item").remove();
 }
 
-export function createCard(link, name, deleteCard) {
+export function likeCard(evt) {
+  evt.target.classList.toggle("card__like-button_is-active");
+}
+
+export function handleImageClick(evt) {
+  objects.imagePopupPicture.src = evt.target.src;
+  objects.imagePopupCaption.textContent = objects.imagePopupPicture.alt =
+    evt.target.alt;
+}
+
+export function createCard(link, name, deleteCard, likeCard, handleImageClick) {
   const card = objects.cardsTemplate
     .querySelector(".places__item")
     .cloneNode(true);
+  const cardLikeButton = card.querySelector(".card__like-button");
   const deleteButton = card.querySelector(".card__delete-button");
   const cardImage = card.querySelector(".card__image");
   const cardTitle = card.querySelector(".card__title");
   cardImage.src = link;
   cardImage.alt = cardTitle.textContent = name;
+  cardImage.addEventListener("click", function (evt) {
+    handleImageClick(evt);
+    openPopup(objects.imagePopup);
+    document.addEventListener("keydown", closePopupByEsc);
+  });
+  cardLikeButton.addEventListener("click", function (evt) {
+    likeCard(evt);
+  });
   deleteButton.addEventListener("click", function (evt) {
     deleteCard(evt);
   });
   return card;
 }
 
-export function createNewCard(evt, likeCard, openPopup) {
+export function createNewCard(evt) {
   evt.preventDefault();
   objects.cardsList.prepend(
-    createCard(objects.addFormLink.value, objects.addFormName.value, deleteCard)
+    createCard(
+      objects.addCardFormLink.value,
+      objects.addCardFormName.value,
+      deleteCard,
+      likeCard,
+      handleImageClick
+    )
   );
-  // objects.addFormLink.value = objects.addFormName.value = "";
-  closePopup(addPopup);
-  objects.addForm.reset();
-}
-
-export function likeCard(evt) {
-  if (evt.target.classList.contains("card__like-button"))
-    evt.target.classList.toggle("card__like-button_is-active");
+  closePopup(objects.addPopup);
+  objects.addCardForm.reset();
 }
