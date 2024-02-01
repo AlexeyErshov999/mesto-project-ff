@@ -1,5 +1,5 @@
 import * as objects from "./index.js";
-import { closePopup, closePopupByEsc, openPopup } from "./modal.js";
+import { closePopup, openPopup } from "./modal.js";
 
 export function deleteCard(evt) {
   evt.target.closest(".places__item").remove();

@@ -7,7 +7,7 @@ import {
   likeCard,
   handleImageClick,
 } from "./card.js";
-import { openPopup, closePopup, closePopupByEsc } from "./modal.js";
+import { openPopup, closePopup } from "./modal.js";
 
 // SEARCHING REQUIRED OBJECTS
 export const cardsList = document.querySelector(".places__list");

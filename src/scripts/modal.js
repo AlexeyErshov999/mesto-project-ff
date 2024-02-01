@@ -9,10 +9,8 @@ export function openPopup(popup) {
 export function closePopup() {
   const openedPopup = document.querySelector(".popup_is-opened");
   if (openedPopup) {
-    openedPopup.classList.remove("popup_is-animated");
-    setTimeout(() => {
-      openedPopup.classList.remove("popup_is-opened");
-    }, 1);
+    openedPopup.classList.remove("popup_is-opened");
+    openedPopup.classList.remove("popup_is-animeted");
     document.removeEventListener("keydown", closePopupByEsc);
   }
 }
