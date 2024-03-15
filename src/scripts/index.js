@@ -8,6 +8,7 @@ import {
   handleImageClick,
 } from "./card.js";
 import { openPopup, closePopup } from "./modal.js";
+import { getInitialCards, getUsersInfo, patchUsersInfo } from "./api.js";
 
 // SEARCHING REQUIRED OBJECTS
 export const cardsList = document.querySelector(".places__list");
@@ -64,3 +65,8 @@ popups.forEach((popup) => {
 });
 profileForm.addEventListener("submit", handleProfileFormSubmit);
 addCardForm.addEventListener("submit", createNewCard);
+
+getUsersInfo();
+getInitialCards();
+patchUsersInfo();
+
