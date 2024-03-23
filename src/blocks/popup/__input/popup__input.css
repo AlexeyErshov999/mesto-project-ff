@@ -14,8 +14,12 @@
   margin-bottom: 0;
 }
 
-.popup__input:invalid {
+.popup__input_type-error {
   border-block-end: 1px solid #FF0000;
+}
+
+.form__input-error_active {
+  visibility: visible;
 }
 
 @media screen and (max-width: 568px) {

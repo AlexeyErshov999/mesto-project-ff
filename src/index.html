@@ -20,18 +20,15 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <div
-            class="profile__image"
-            style="background-image: url(<%=require('./images/avatar.jpg')%>)"
-          ></div>
+          <div class="profile__image"></div>
           <div class="profile__info">
-            <h1 class="profile__title">Жак-Ив Кусто</h1>
+            <h1 class="profile__title"></h1>
             <button
               class="profile__edit-button"
               type="button"
               aria-label="Редактировать профиль"
             ></button>
-            <p class="profile__description">Исследователь океана</p>
+            <p class="profile__description"></p>
           </div>
           <button
             class="profile__add-button"
@@ -58,8 +55,13 @@
               placeholder="Имя"
               minlength="2"
               maxlength="40"
+              pattern="^[a-zA-Z\-\s]+$"
+              data-error-message="Разрешены только латинские, кириллические
+            буквы, знаки дефиса и пробелы"
+              id="input-name"
               required
             />
+            <span class="input-name-error"></span>
             <input
               type="text"
               name="description"
@@ -67,8 +69,13 @@
               placeholder="Занятие"
               minlength="2"
               maxlength="200"
+              pattern="^[a-zA-Z\-\s]+$"
+              data-error-message="Разрешены только латинские, кириллические
+            буквы, знаки дефиса и пробелы"
+              id="input-description"
               required
             />
+            <span class="input-description-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -107,6 +114,33 @@
           <p class="popup__caption"></p>
         </div>
       </div>
+      <div class="popup popup_type_change-profile-photo">
+        <!-- класс no-min-height добавлен чтобы попап смены аватара отображался корректно, ведь свойство min-height класса popup__content его растягивает-->
+        <div class="popup__content no-min-height">
+          <button type="button" class="popup__close"></button>
+          <h3 class="popup__title">Обновить аватар</h3>
+          <form class="popup__form" name="new-avatar">
+            <input
+              type="url"
+              name="avatar-url"
+              class="popup__input popup__input_type_card-name"
+              placeholder="Ссылка на картинку"
+              required
+            />
+            <button type="submit" class="button popup__button">
+              Сохранить
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="popup popup_type_confirm-card-delete">
+        <!-- класс no-min-height добавлен чтобы попап смены аватара отображался корректно, ведь свойство min-height класса popup__content его растягивает-->
+        <div class="popup__content no-min-height">
+          <button type="button" class="popup__close"></button>
+          <h3 class="popup__title">Вы уверены?</h3>
+          <button type="submit" class="button popup__button">Да</button>
+        </div>
+      </div>
     </div>
 
     <template id="card-template">
@@ -119,11 +153,14 @@
         ></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <button
-            type="button"
-            class="card__like-button"
-            aria-label="Поставить лайк"
-          ></button>
+          <div clas="card__like-section">
+            <button
+              type="button"
+              class="card__like-button"
+              aria-label="Поставить лайк"
+            ></button>
+            <span class="card__like-counter"></span>
+          </div>
         </div>
       </li>
     </template>

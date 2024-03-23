@@ -1,3 +1,5 @@
+import { popupSaveButtons } from ".";
+
 export function openPopup(popup) {
   popup.classList.add("popup_is-animated");
   setTimeout(() => {
@@ -12,6 +14,14 @@ export function closePopup() {
     openedPopup.classList.remove("popup_is-opened");
     openedPopup.classList.remove("popup_is-animeted");
     document.removeEventListener("keydown", closePopupByEsc);
+  }
+}
+
+export function renderLoading(isLoading) {
+  if (isLoading) {
+    popupSaveButtons.forEach(button => button.textContent = 'Сохранение...');
+  } else {
+    popupSaveButtons.forEach(button => button.textContent = 'Сохранить');
   }
 }
 
