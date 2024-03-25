@@ -17,6 +17,7 @@ export function getUsersInfo() {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
   }).then((res) => checkResponse(res));
+  // TODO: обработать ошибку
 }
 
 // запрос карточек с сервера
@@ -24,6 +25,7 @@ export function getInitialCards() {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
   }).then((res) => checkResponse(res));
+  // TODO: обработать ошибку
 }
 
 // // обновление данных юзера на сервере

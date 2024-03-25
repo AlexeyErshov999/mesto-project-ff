@@ -22,7 +22,7 @@ function isValid(formElement, inputElement) {
 }
 
 function setEventListeners(formElement) {
-    const inputsList = Array.from(formElement.querySelectorAll('.popup__input'));
+    const inputsList = formElement.querySelectorAll('.popup__input');
     inputsList.forEach(input => {
         input.addEventListener('input', () => {
             isValid(formElement, input);

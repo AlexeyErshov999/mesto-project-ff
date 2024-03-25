@@ -1,3 +1,12 @@
+// TODO: валидация
+// TODO: деплой
+// TODO: проверка действительности изображения
+// TODO: РЕФАКТОРИНГ ВСЕХ ФАЙЛОВ!!!
+// FIXME: сохранение состояния лайка
+// FIXME: hover значок редактирования аватара
+
+
+
 // подключение модулей и функций
 import "../pages/index.css"; // импорт главного файла стилей для webpack
 import {
@@ -8,7 +17,15 @@ import {
   toggleLikeCard,
 } from "./card.js";
 import { openPopup, closePopup, renderLoading } from "./modal.js";
-import { checkImageUrl, getInitialCards, getUsersInfo, patchUsersInfo, updateAvatarOnServer } from "./api.js";
+import {
+  addNewCardToServer,
+  checkImageUrl,
+  deleteCardFromServer,
+  getInitialCards,
+  getUsersInfo,
+  patchUsersInfo,
+  updateAvatarOnServer,
+} from "./api.js";
 import { enableValidation } from "./validation.js";
 
 // поиск объектов DOM
@@ -17,7 +34,11 @@ export const cardsTemplate = document.querySelector("#card-template").content;
 const popups = document.querySelectorAll(".popup");
 export const editPopup = document.querySelector(".popup_type_edit");
 export const addPopup = document.querySelector(".popup_type_new-card");
-export const confirmDeleteCardPopup = document.querySelector('.popup_type_confirm-card-delete');
+export const confirmPopup = document.querySelector(
+  ".popup_type_confirm-card-delete"
+);
+export const confirmDeleteButton =
+  confirmPopup.querySelector(".popup__button");
 export const editButton = document.querySelector(".profile__edit-button");
 export const addButton = document.querySelector(".profile__add-button");
 export const closeButtons = document.querySelectorAll(".popup__close");
@@ -36,16 +57,18 @@ const avatarFormUrl = avatarForm["avatar-url"];
 export const imagePopup = document.querySelector(".popup_type_image");
 export const imagePopupPicture = imagePopup.querySelector(".popup__image");
 export const imagePopupCaption = imagePopup.querySelector(".popup__caption");
-const profileImage = document.querySelector('.profile__image');
-const avatarPopup = document.querySelector('.popup_type_change-profile-photo');
-export const popupSaveButtons = Array.from(document.querySelectorAll('.popup__button'));
+const profileImage = document.querySelector(".profile__image");
+const avatarPopup = document.querySelector(".popup_type_change-profile-photo");
+export const popupSaveButtons = document.querySelectorAll(".popup__button");
+export const popupConfirmButton = confirmPopup.querySelector(".popup__confirm-button");
+export const confirmForm = document.forms["confirm-form"];
+
 
 export let userId = null; // Запоминаем id пользователя
 
 // проверяем что данные пользователя и массив карточек точно пришли
 Promise.all([getUsersInfo(), getInitialCards()]).then(
   ([usersInfo, cardsData]) => {
-    console.log(usersInfo)
     userId = usersInfo._id; // получаем id юзера
     profileTitle.textContent = usersInfo.name; // вставляем в шапку информацию о пользователе
     profileDescription.textContent = usersInfo.about;
@@ -68,18 +91,18 @@ Promise.all([getUsersInfo(), getInitialCards()]).then(
     });
   }
 );
-// обработать ошибку!!!
+// TODO: обработать ошибку
 
-// отправка формы редактирования профиля 
+// отправка формы редактирования профиля
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   renderLoading(true);
   patchUsersInfo(profileFormName.value, profileFormDescription.value)
-  // обработать ошибку!!!
+    // TODO: обработать ошибку
     .finally(() => {
       renderLoading(false);
       closePopup(editPopup);
-    })
+    });
   profileTitle.textContent = profileForm.name.value; /* заполняем данные шапки 
   из полей формы, чтоб не запрашивать данные с сервера */
   profileDescription.textContent = profileForm.description.value;
@@ -89,28 +112,41 @@ function handleProfileFormSubmit(evt) {
 function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
   renderLoading(true);
-  // checkImageUrl(avatarFormUrl.value);
   profileImage.style.backgroundImage = `url("${avatarFormUrl.value}")`;
   updateAvatarOnServer(avatarFormUrl.value)
-    .then(res => console.log(res))
-    // обработать ошибку!!!
+    // TODO: обработать ошибку
     .finally(() => {
       renderLoading(false);
       closePopup(avatarForm);
-    })
+    });
 }
 
 // отправка формы добавления карточки
-// function handleNewCardFormSubmit(evt) {
-//   evt.preventDefault();
-//   renderLoading(true);
-//   createNewCard
-//     // обработать ошибку!!!
-//     // .finally(() => {
-//     //   renderLoading(false);
-//     //   closePopup(addPopup);
-//     // })
-// }
+function handleNewCardFormSubmit(evt) {
+  evt.preventDefault();
+  renderLoading(true);
+  addNewCardToServer(addCardFormName.value, addCardFormLink.value)
+    .then((card) => {
+      cardsList.prepend(
+        createCard(
+          addCardFormLink.value,
+          addCardFormName.value,
+          card.likes,
+          card.owner._id,
+          card._id,
+          deleteCard,
+          toggleLikeCard,
+          handleImageClick
+        )
+      );
+    })
+    // TODO: обработать ошибку
+    .finally(() => {
+      renderLoading(false);
+      addCardForm.reset();
+      closePopup(addCardForm);
+    });
+}
 
 // слушатели
 // открытие/отправка формы профиля
@@ -125,16 +161,15 @@ profileForm.addEventListener("submit", handleProfileFormSubmit);
 addButton.addEventListener("click", function () {
   openPopup(addPopup);
 });
-addCardForm.addEventListener("submit", createNewCard);
+addCardForm.addEventListener("submit", handleNewCardFormSubmit);
 
 // открытие/отправка формы смены аватара
-profileImage.addEventListener("click", function() {
+profileImage.addEventListener("click", function () {
   openPopup(avatarPopup);
 });
 avatarForm.addEventListener("submit", handleAvatarFormSubmit);
 
-// открытие/отправка формы подтверждения удаления карточки
-
+// отправка формы подтверждения удаления
 
 // слушатель закрытия попапов по оверлею, кнопке
 popups.forEach((popup) => {
@@ -143,3 +178,5 @@ popups.forEach((popup) => {
     if (evt.target.classList.contains("popup__close")) closePopup();
   });
 });
+
+enableValidation();

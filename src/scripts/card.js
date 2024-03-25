@@ -1,12 +1,11 @@
 // подключение модулей и функций
 import {
-  addNewCardToServer,
   deleteCardFromServer,
   deleteLikeOnCard,
   putLikeOnCard,
 } from "./api.js";
 import * as objects from "./index.js";
-import { closePopup, openPopup } from "./modal.js";
+import { closePopup, openPopup, renderLoading} from "./modal.js";
 
 // удаление карточки со страницы
 export function deleteCard(evt) {
@@ -56,50 +55,35 @@ export function createCard(
       toggleLikeCard(evt);
       deleteLikeOnCard(cardId)
         .then((res) => (cardLikes.textContent = res.likes.length))
-        .catch((res) => console.log("Error: " + res.status));
+        // TODO: обработать ошибку
     } else {
       toggleLikeCard(evt);
       putLikeOnCard(cardId).then(
         (res) => (cardLikes.textContent = res.likes.length)
+        // TODO: обработать ошибку
       );
     }
   });
-  deleteButton.addEventListener("click", (evt) => {
-    openPopup(objects.confirmDeleteCardPopup);
-    // deleteCard(evt);
-    // deleteCardFromServer(cardId).catch((res) => {
-    //   return Promise.reject("Error: " + res.status);
-    // });
-  });
+  // FIXME: разобраться
+  // deleteButton.addEventListener("click", () => {
+  //   openPopup(objects.confirmPopup);
+  //   objects.confirmForm.addEventListener("submit", (evt) => {
+  //     evt.preventDefault();
+  //     // renderLoading(true);
+  //     deleteCard(clickTarget);
+  //   //   deleteCardFromServer(cardId)
+  //   // // TODO: обработать ошибку
+  //   //     .finally(() => {
+  //   //       renderLoading(false);
+  //   //       closePopup(objects.confirmPopup);
+  //   //     });
+  //   console.log("hello")
+  //   })
+  // })
 
   if (!(cardOwnerId === objects.userId)) {
     deleteButton.style.display = "none";
-    deleteButton.removeEventListener("click", (evt) => deleteCard(evt));
   }
 
   return card;
-}
-
-export function createNewCard(evt) {
-  evt.preventDefault();
-  addNewCardToServer(
-    objects.addCardFormName.value,
-    objects.addCardFormLink.value
-  )
-    .then((card) => {
-      console.log(card);
-      objects.cardsList.prepend(
-        createCard(
-          objects.addCardFormLink.value,
-          objects.addCardFormName.value,
-          card.likes,
-          deleteCard,
-          toggleLikeCard,
-          handleImageClick
-        )
-      );
-    })
-    .catch((res) => console.log("Error: " + res.status));
-  closePopup(objects.addPopup);
-  objects.addCardForm.reset();
 }

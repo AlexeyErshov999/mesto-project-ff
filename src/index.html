@@ -61,7 +61,7 @@
               id="input-name"
               required
             />
-            <span class="input-name-error"></span>
+            <span class="input-name-error popup__input_type-error">Error</span>
             <input
               type="text"
               name="description"
@@ -138,7 +138,9 @@
         <div class="popup__content no-min-height">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Вы уверены?</h3>
-          <button type="submit" class="button popup__button">Да</button>
+          <form class="popup__form" name="confirm-form">
+            <button type="submit" class="button popup__button popup__confirm-button">Да</button>
+          </form>
         </div>
       </div>
     </div>
@@ -153,7 +155,7 @@
         ></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <div clas="card__like-section">
+          <div class="card__like-section">
             <button
               type="button"
               class="card__like-button"

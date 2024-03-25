@@ -1,4 +1,4 @@
-import { popupSaveButtons } from ".";
+import { popupConfirmButton, popupSaveButtons } from ".";
 
 export function openPopup(popup) {
   popup.classList.add("popup_is-animated");
@@ -22,6 +22,7 @@ export function renderLoading(isLoading) {
     popupSaveButtons.forEach(button => button.textContent = 'Сохранение...');
   } else {
     popupSaveButtons.forEach(button => button.textContent = 'Сохранить');
+    popupConfirmButton.textContent = 'Да';
   }
 }
 
