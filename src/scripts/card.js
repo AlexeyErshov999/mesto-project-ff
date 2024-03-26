@@ -5,11 +5,11 @@ import {
   putLikeOnCard,
 } from "./api.js";
 import * as objects from "./index.js";
-import { closePopup, openPopup, renderLoading} from "./modal.js";
+import { openPopup, renderLoading, closePopup } from "./modal.js";
 
 // удаление карточки со страницы
-export function deleteCard(evt) {
-  evt.target.closest(".card").remove();
+export function deleteCard(card) {
+  card.remove();
 }
 
 // смена состояния лайка
@@ -54,32 +54,38 @@ export function createCard(
     if (evt.target.classList.contains("card__like-button_is-active")) {
       toggleLikeCard(evt);
       deleteLikeOnCard(cardId)
-        .then((res) => (cardLikes.textContent = res.likes.length))
-        // TODO: обработать ошибку
+        .then((res) => {
+          cardLikes.textContent = res.likes.length;
+        })
+        .catch((err) => console.error("Error: ", err));
     } else {
       toggleLikeCard(evt);
-      putLikeOnCard(cardId).then(
-        (res) => (cardLikes.textContent = res.likes.length)
-        // TODO: обработать ошибку
-      );
+      putLikeOnCard(cardId)
+        .then((res) => (cardLikes.textContent = res.likes.length))
+        .catch((err) => console.error("Error: ", err));
     }
   });
-  // FIXME: разобраться
-  // deleteButton.addEventListener("click", () => {
-  //   openPopup(objects.confirmPopup);
-  //   objects.confirmForm.addEventListener("submit", (evt) => {
-  //     evt.preventDefault();
-  //     // renderLoading(true);
-  //     deleteCard(clickTarget);
-  //   //   deleteCardFromServer(cardId)
-  //   // // TODO: обработать ошибку
-  //   //     .finally(() => {
-  //   //       renderLoading(false);
-  //   //       closePopup(objects.confirmPopup);
-  //   //     });
-  //   console.log("hello")
-  //   })
-  // })
+
+  deleteButton.addEventListener("click", (evt) => {
+    const currentDeleteButton = evt.target;
+    openPopup(objects.confirmPopup);
+    objects.confirmForm.addEventListener("submit", (evt) => {
+      evt.preventDefault();
+      renderLoading(true);
+      deleteCard(currentDeleteButton.closest(".card"));
+      deleteCardFromServer(cardId)
+        .catch((err) => console.error("Error: ", err))
+        .finally(() => {
+          renderLoading(false);
+          closePopup(objects.confirmPopup);
+        });
+    });
+  });
+
+  likes.forEach((owner) => {
+    if (owner._id === objects.userId)
+      cardLikeButton.classList.add("card__like-button_is-active");
+  });
 
   if (!(cardOwnerId === objects.userId)) {
     deleteButton.style.display = "none";

@@ -47,7 +47,7 @@
         <div class="popup__content">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Редактировать профиль</h3>
-          <form class="popup__form" name="edit-profile">
+          <form class="popup__form" name="edit-profile" novalidate>
             <input
               type="text"
               name="name"
@@ -55,13 +55,13 @@
               placeholder="Имя"
               minlength="2"
               maxlength="40"
-              pattern="^[a-zA-Z\-\s]+$"
+              pattern="^[a-zA-Zа-яёА-ЯЁ\-\s]+$"
               data-error-message="Разрешены только латинские, кириллические
             буквы, знаки дефиса и пробелы"
               id="input-name"
               required
             />
-            <span class="input-name-error popup__input_type-error">Error</span>
+            <span class="input-name-error form__input-error"></span>
             <input
               type="text"
               name="description"
@@ -69,13 +69,13 @@
               placeholder="Занятие"
               minlength="2"
               maxlength="200"
-              pattern="^[a-zA-Z\-\s]+$"
+              pattern="^[a-zA-Zа-яёА-ЯЁ\-\s]+$"
               data-error-message="Разрешены только латинские, кириллические
             буквы, знаки дефиса и пробелы"
               id="input-description"
               required
             />
-            <span class="input-description-error"></span>
+            <span class="input-description-error form__input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -86,21 +86,30 @@
         <div class="popup__content">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Новое место</h3>
-          <form class="popup__form" name="new-place">
+          <form class="popup__form" name="new-place" novalidate>
             <input
               type="text"
               name="place-name"
               class="popup__input popup__input_type_card-name"
               placeholder="Название"
+              minlength="2"
+              maxlength="30"
+              pattern="^[a-zA-Zа-яёА-ЯЁ\-\s]+$"
+              data-error-message="Разрешены только латинские, кириллические
+            буквы, знаки дефиса и пробелы"
+              id="place-name"
               required
             />
+            <span class="place-name-error form__input-error"></span>
             <input
               type="url"
               name="link"
               class="popup__input popup__input_type_url"
               placeholder="Ссылка на картинку"
+              id="link"
               required
             />
+            <span class="link-error form__input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -119,14 +128,16 @@
         <div class="popup__content no-min-height">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Обновить аватар</h3>
-          <form class="popup__form" name="new-avatar">
+          <form class="popup__form" name="new-avatar" novalidate>
             <input
               type="url"
               name="avatar-url"
               class="popup__input popup__input_type_card-name"
               placeholder="Ссылка на картинку"
+              id="avatar-url"
               required
             />
+            <span class="avatar-url-error form__input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -138,8 +149,13 @@
         <div class="popup__content no-min-height">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Вы уверены?</h3>
-          <form class="popup__form" name="confirm-form">
-            <button type="submit" class="button popup__button popup__confirm-button">Да</button>
+          <form class="popup__form" name="confirm-form" novalidate>
+            <button
+              type="submit"
+              class="button popup__button popup__confirm-button"
+            >
+              Да
+            </button>
           </form>
         </div>
       </div>

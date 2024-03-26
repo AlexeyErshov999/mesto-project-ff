@@ -19,13 +19,17 @@ export function closePopup() {
 
 export function renderLoading(isLoading) {
   if (isLoading) {
-    popupSaveButtons.forEach(button => button.textContent = 'Сохранение...');
+    popupSaveButtons.forEach(
+      (button) => (button.textContent = "Сохранение...")
+    );
   } else {
-    popupSaveButtons.forEach(button => button.textContent = 'Сохранить');
-    popupConfirmButton.textContent = 'Да';
+    popupSaveButtons.forEach((button) => (button.textContent = "Сохранить"));
+    popupConfirmButton.textContent = "Да";
   }
 }
 
 export function closePopupByEsc(evt) {
-  if (evt.key === "Escape") closePopup();
+  if (evt.key === "Escape") {
+    closePopup();
+  }
 }

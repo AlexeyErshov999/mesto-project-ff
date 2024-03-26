@@ -1,8 +1,8 @@
 // конфигурация запроса
 const config = {
-  baseUrl: "https://nomoreparties.co/v1/wff-cohort-8",
+  baseUrl: "https://nomoreparties.co/v1/wff-cohort-10",
   headers: {
-    authorization: "bbde8bf8-a634-4ece-bccd-5d9c5241c2de",
+    authorization: "099009bb-f324-40eb-8de7-a3e92491c8ff",
     "Content-Type": "application/json",
   },
 };
@@ -17,7 +17,6 @@ export function getUsersInfo() {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
   }).then((res) => checkResponse(res));
-  // TODO: обработать ошибку
 }
 
 // запрос карточек с сервера
@@ -25,7 +24,6 @@ export function getInitialCards() {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
   }).then((res) => checkResponse(res));
-  // TODO: обработать ошибку
 }
 
 // // обновление данных юзера на сервере

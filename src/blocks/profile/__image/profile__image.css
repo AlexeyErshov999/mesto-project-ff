@@ -1,12 +1,25 @@
 .profile__image {
   width: 120px;
   height: 120px;
+  margin: 0 29px 0 0;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
-  background-size: cover;
   background-position: center;
-  margin: 0 29px 0 0;
+  background-size: cover;
+}
+
+.profile__image:hover::before {
+  content: '';
+  display: block;
+  background-color: rgba(0, 0, 0, 0.7);
+  background-image: url(/src/images/edit-icon.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 18%;
+  cursor: pointer;
+  inline-size: 100%;
+  block-size: 100%;
 }
 
 @media screen and (max-width: 740px) {
