@@ -25,6 +25,17 @@ export function handleImageClick(evt) {
   openPopup(objects.imagePopup);
 }
 
+function deleteCardFromServerAndPage(button, card_id) {
+  renderLoading(true);
+  deleteCardFromServer(card_id)
+    .catch((err) => console.error("Error: ", err))
+    .finally(() => {
+      renderLoading(false);
+      deleteCard(button.closest(".card"));
+      closePopup(objects.confirmPopup);
+    });
+}
+
 // создание карточки
 export function createCard(
   link,
@@ -66,19 +77,21 @@ export function createCard(
     }
   });
 
+  let currentDeleteButton = null;
+
   deleteButton.addEventListener("click", (evt) => {
-    const currentDeleteButton = evt.target;
+    currentDeleteButton = evt.target;
     openPopup(objects.confirmPopup);
-    objects.confirmForm.addEventListener("submit", (evt) => {
-      evt.preventDefault();
-      renderLoading(true);
-      deleteCard(currentDeleteButton.closest(".card"));
-      deleteCardFromServer(cardId)
-        .catch((err) => console.error("Error: ", err))
-        .finally(() => {
-          renderLoading(false);
-          closePopup(objects.confirmPopup);
-        });
+
+    objects.popupConfirmButton.addEventListener("click", function () {
+      deleteCardFromServerAndPage(currentDeleteButton, cardId);
+    });
+
+    window.addEventListener("keydown", (evt) => {
+      if (evt.key === "Enter") {
+        evt.preventDefault();
+        deleteCardFromServerAndPage(currentDeleteButton, cardId);
+      }
     });
   });
 

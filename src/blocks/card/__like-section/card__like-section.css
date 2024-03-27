@@ -1,6 +1,5 @@
 .card__like-section {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: center;
+  gap: 3px;
 }

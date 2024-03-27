@@ -1,5 +1,4 @@
 //TODO: правильное отображение лайка
-//TODO: закрытие попапа подтверждения нажатием на enter
 
 // подключение модулей и функций
 import "../pages/index.css"; // импорт главного файла стилей для webpack
@@ -112,7 +111,7 @@ function handleAvatarFormSubmit(evt) {
     .catch((err) => console.error("Error: ", err))
     .finally(() => {
       renderLoading(false);
-      closePopup(avatarForm)
+      closePopup(avatarForm);
       avatarForm.reset();
     });
 }
