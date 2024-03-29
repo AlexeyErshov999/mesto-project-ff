@@ -9,7 +9,12 @@ const config = {
 
 // функция автоматической проверки статуса ответа
 function checkResponse(res) {
-  if (res.ok) return res.json();
+  if (!res.ok) {
+    /* прокидываю ошибку со статусом ответа */
+    throw new Error(res.status);
+  } else {
+    return res.json();
+  }
 }
 
 // запрос данных юзера с сервера

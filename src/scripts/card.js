@@ -28,10 +28,10 @@ export function handleImageClick(evt) {
 function deleteCardFromServerAndPage(button, card_id) {
   renderLoading(true);
   deleteCardFromServer(card_id)
-    .catch((err) => console.error("Error: ", err))
+    .then(() => deleteCard(button.closest(".card")))
+    .catch((err) => console.error("Проблема с удалением карточки: ", err))
     .finally(() => {
       renderLoading(false);
-      deleteCard(button.closest(".card"));
       closePopup(objects.confirmPopup);
     });
 }
@@ -68,12 +68,12 @@ export function createCard(
         .then((res) => {
           cardLikes.textContent = res.likes.length;
         })
-        .catch((err) => console.error("Error: ", err));
+        .catch((err) => console.error("Проблема со снятием лайка: ", err));
     } else {
       toggleLikeCard(evt);
       putLikeOnCard(cardId)
         .then((res) => (cardLikes.textContent = res.likes.length))
-        .catch((err) => console.error("Error: ", err));
+        .catch((err) => console.error("Проблема с постановкой лайка: ", err));
     }
   });
 

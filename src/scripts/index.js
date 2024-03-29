@@ -1,5 +1,3 @@
-//TODO: правильное отображение лайка
-
 // подключение модулей и функций
 import "../pages/index.css"; // импорт главного файла стилей для webpack
 import {
@@ -11,17 +9,12 @@ import {
 import { openPopup, closePopup, renderLoading } from "./modal.js";
 import {
   addNewCardToServer,
-  deleteCardFromServer,
   getInitialCards,
   getUsersInfo,
   patchUsersInfo,
   updateAvatarOnServer,
 } from "./api.js";
-import {
-  clearValidation,
-  enableValidation,
-  toggleButtonState,
-} from "./validation.js";
+import { clearValidation, enableValidation } from "./validation.js";
 
 // поиск объектов DOM
 export const cardsList = document.querySelector(".places__list");
@@ -85,30 +78,44 @@ Promise.all([getUsersInfo(), getInitialCards()])
       );
     });
   })
-  .catch((err) => console.error("Error: ", err));
+  .catch((err) =>
+    /* для каждого сообщения в catch прописана проблема,
+     чтоб легко определять источник ошибки */
+    console.error(
+      "Проблема с загрузкой данных пользователя или карточек: ",
+      err
+    )
+  );
 
 // отправка формы редактирования профиля
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   renderLoading(true);
   patchUsersInfo(profileFormName.value, profileFormDescription.value)
-    .catch((err) => console.error("Error: ", err))
+    .then((res) => {
+      /* теперь данные подставляются с сервера */
+      profileTitle.textContent = res.name;
+      profileDescription.textContent = res.about;
+    })
+    .catch((err) =>
+      console.error("Проблема с обновлением данных пользователя: ", err)
+    )
     .finally(() => {
       renderLoading(false);
       closePopup(editPopup);
     });
-  profileTitle.textContent = profileForm.name.value; /* заполняем данные шапки 
-  из полей формы, чтоб не запрашивать данные с сервера */
-  profileDescription.textContent = profileForm.description.value;
 }
 
 // отправка формы смены аватара
 function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
   renderLoading(true);
-  profileImage.style.backgroundImage = `url("${avatarFormUrl.value}")`;
   updateAvatarOnServer(avatarFormUrl.value)
-    .catch((err) => console.error("Error: ", err))
+    .then((res) => {
+      /* теперь данные подставляются с сервера */
+      profileImage.style.backgroundImage = `url('${res.avatar}')`;
+    })
+    .catch((err) => console.error("Проблема с обновлением аватара: ", err))
     .finally(() => {
       renderLoading(false);
       closePopup(avatarForm);
@@ -124,8 +131,9 @@ function handleNewCardFormSubmit(evt) {
     .then((card) => {
       cardsList.prepend(
         createCard(
-          addCardFormLink.value,
-          addCardFormName.value,
+          /* теперь данные подставляются с сервера */
+          card.link,
+          card.name,
           card.likes,
           card.owner._id,
           card._id,
@@ -135,11 +143,11 @@ function handleNewCardFormSubmit(evt) {
         )
       );
     })
-    .catch((err) => console.error("Error: ", err))
+    .catch((err) => console.error("Проблема с добавлением карточки: ", err))
     .finally(() => {
       renderLoading(false);
-      addCardForm.reset();
       closePopup(addCardForm);
+      addCardForm.reset();
     });
 }
 
@@ -150,10 +158,6 @@ editButton.addEventListener("click", function () {
   profileFormName.value = profileTitle.textContent;
   profileFormDescription.value = profileDescription.textContent;
   openPopup(editPopup);
-  toggleButtonState(
-    profileForm.elements,
-    profileForm.querySelector(".popup__button")
-  );
 });
 profileForm.addEventListener("submit", handleProfileFormSubmit);
 
@@ -171,17 +175,13 @@ profileImage.addEventListener("click", function () {
 });
 avatarForm.addEventListener("submit", handleAvatarFormSubmit);
 
-// отправка формы подтверждения удаления
-
 // слушатель закрытия попапов по оверлею, кнопке
 popups.forEach((popup) => {
   popup.addEventListener("mousedown", (evt) => {
-    if (evt.target.classList.contains("popup_is-opened")) {
-      closePopup();
-    }
-    if (evt.target.classList.contains("popup__close")) {
-      closePopup();
-    }
+    if (
+      evt.target.classList.contains("popup_is-opened") ||
+      evt.target.classList.contains("popup__close")
+    ) closePopup();
   });
 });
 
