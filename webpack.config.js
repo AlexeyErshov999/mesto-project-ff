@@ -14,6 +14,7 @@ module.exports = {
   },
   mode: "development",
   devServer: {
+    open: "Google Chrome",
     static: path.resolve(__dirname, "./dist"),
     open: true,
     compress: true,

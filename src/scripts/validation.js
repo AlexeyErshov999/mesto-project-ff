@@ -1,4 +1,6 @@
-const validationConfig = {
+import { profileFormSubmitButton } from "./index.js";
+
+export const validationConfig = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
   submitButtonSelector: ".popup__button",
@@ -57,7 +59,8 @@ function setEventListeners(formElement) {
   const buttonElement = formElement.querySelector(
     validationConfig.submitButtonSelector
   );
-  toggleButtonState(inputsList, buttonElement);
+  if (buttonElement !== profileFormSubmitButton)
+    toggleButtonState(inputsList, buttonElement);
   inputsList.forEach((input) => {
     input.addEventListener("input", () => {
       isValid(formElement, input);

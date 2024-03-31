@@ -5,7 +5,8 @@
   margin-bottom: 5px;
   border: 0;
   border-bottom: 1px solid rgba(0, 0, 0, .2);
-  padding: 10px 0 0;
+  /* Добавил паддинг справа и слева, чтоб текст не прилипал к рамке */
+  padding: 10px 5px;
   font-size: 14px;
   line-height: 18px;
 }

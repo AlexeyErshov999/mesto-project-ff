@@ -1,11 +1,6 @@
 // подключение модулей и функций
 import "../pages/index.css"; // импорт главного файла стилей для webpack
-import {
-  deleteCard,
-  createCard,
-  handleImageClick,
-  toggleLikeCard,
-} from "./card.js";
+import { deleteCard, createCard, toggleLikeCard } from "./card.js";
 import { openPopup, closePopup, renderLoading } from "./modal.js";
 import {
   addNewCardToServer,
@@ -14,7 +9,7 @@ import {
   patchUsersInfo,
   updateAvatarOnServer,
 } from "./api.js";
-import { clearValidation, enableValidation } from "./validation.js";
+import { clearValidation, enableValidation, validationConfig } from "./validation.js";
 
 // поиск объектов DOM
 export const cardsList = document.querySelector(".places__list");
@@ -36,6 +31,7 @@ export const profileDescription = document.querySelector(
 export const profileForm = document.forms["edit-profile"];
 export const profileFormName = profileForm.name;
 export const profileFormDescription = profileForm.description;
+export const profileFormSubmitButton = profileForm.querySelector('.popup__button');
 export const addCardForm = document.forms["new-place"];
 export const addCardFormName = addCardForm["place-name"];
 export const addCardFormLink = addCardForm.link;
@@ -53,6 +49,7 @@ export const popupConfirmButton = confirmPopup.querySelector(
 export const confirmForm = document.forms["confirm-form"];
 
 export let userId = null; // Запоминаем id пользователя
+export let submitter = null;
 
 // проверяем что данные пользователя и массив карточек точно пришли
 Promise.all([getUsersInfo(), getInitialCards()])
@@ -88,8 +85,7 @@ Promise.all([getUsersInfo(), getInitialCards()])
   );
 
 // отправка формы редактирования профиля
-function handleProfileFormSubmit(evt) {
-  evt.preventDefault();
+function handleProfileFormSubmit() {
   renderLoading(true);
   patchUsersInfo(profileFormName.value, profileFormDescription.value)
     .then((res) => {
@@ -106,9 +102,14 @@ function handleProfileFormSubmit(evt) {
     });
 }
 
+export function handleImageClick(evt) {
+  imagePopupPicture.src = evt.target.src;
+  imagePopupCaption.textContent = imagePopupPicture.alt = evt.target.alt;
+  openPopup(imagePopup);
+}
+
 // отправка формы смены аватара
-function handleAvatarFormSubmit(evt) {
-  evt.preventDefault();
+function handleAvatarFormSubmit() {
   renderLoading(true);
   updateAvatarOnServer(avatarFormUrl.value)
     .then((res) => {
@@ -124,8 +125,7 @@ function handleAvatarFormSubmit(evt) {
 }
 
 // отправка формы добавления карточки
-function handleNewCardFormSubmit(evt) {
-  evt.preventDefault();
+function handleNewCardFormSubmit() {
   renderLoading(true);
   addNewCardToServer(addCardFormName.value, addCardFormLink.value)
     .then((card) => {
@@ -154,26 +154,41 @@ function handleNewCardFormSubmit(evt) {
 // слушатели
 // открытие/отправка формы профиля
 editButton.addEventListener("click", function () {
-  clearValidation(profileForm);
+  // clearValidation(profileForm, validationConfig);
   profileFormName.value = profileTitle.textContent;
   profileFormDescription.value = profileDescription.textContent;
   openPopup(editPopup);
+  console.log(editButton)
+  editButton.disabled = false;
 });
-profileForm.addEventListener("submit", handleProfileFormSubmit);
+profileForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  // при каждом сабмите любой формы ловится кнопка, вызвавшая сабмит
+  submitter = evt.submitter;
+  handleProfileFormSubmit();
+});
 
 // открытие/отправка формы создания карточки
 addButton.addEventListener("click", function () {
-  clearValidation(addCardForm);
+  // clearValidation(addCardForm, validationConfig);
   openPopup(addPopup);
 });
-addCardForm.addEventListener("submit", handleNewCardFormSubmit);
+addCardForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  submitter = evt.submitter;
+  handleNewCardFormSubmit();
+});
 
 // открытие/отправка формы смены аватара
 profileImage.addEventListener("click", function () {
-  clearValidation(avatarForm);
+  // clearValidation(avatarForm, validationConfig);
   openPopup(avatarPopup);
 });
-avatarForm.addEventListener("submit", handleAvatarFormSubmit);
+avatarForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  submitter = evt.submitter;
+  handleAvatarFormSubmit();
+});
 
 // слушатель закрытия попапов по оверлею, кнопке
 popups.forEach((popup) => {
@@ -181,15 +196,9 @@ popups.forEach((popup) => {
     if (
       evt.target.classList.contains("popup_is-opened") ||
       evt.target.classList.contains("popup__close")
-    ) closePopup();
+    )
+      closePopup();
   });
 });
 
-enableValidation({
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error_visible",
-});
+enableValidation();

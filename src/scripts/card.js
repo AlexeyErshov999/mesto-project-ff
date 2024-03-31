@@ -17,14 +17,6 @@ export function toggleLikeCard(evt) {
   evt.target.classList.toggle("card__like-button_is-active");
 }
 
-// открытие попапа-картинки
-export function handleImageClick(evt) {
-  objects.imagePopupPicture.src = evt.target.src;
-  objects.imagePopupCaption.textContent = objects.imagePopupPicture.alt =
-    evt.target.alt;
-  openPopup(objects.imagePopup);
-}
-
 function deleteCardFromServerAndPage(button, card_id) {
   renderLoading(true);
   deleteCardFromServer(card_id)
@@ -60,21 +52,23 @@ export function createCard(
   cardImage.alt = cardTitle.textContent = name;
   cardLikes.textContent = likes.length;
 
-  cardImage.addEventListener("click", handleImageClick);
+  cardImage.addEventListener("click", objects.handleImageClick);
   cardLikeButton.addEventListener("click", (evt) => {
-    if (evt.target.classList.contains("card__like-button_is-active")) {
-      toggleLikeCard(evt);
-      deleteLikeOnCard(cardId)
-        .then((res) => {
-          cardLikes.textContent = res.likes.length;
-        })
-        .catch((err) => console.error("Проблема со снятием лайка: ", err));
-    } else {
-      toggleLikeCard(evt);
-      putLikeOnCard(cardId)
-        .then((res) => (cardLikes.textContent = res.likes.length))
-        .catch((err) => console.error("Проблема с постановкой лайка: ", err));
-    }
+    // сократил дублирование из подсказки с ревью
+    // очень крутой метод, спасибо!
+    const likeMethod = evt.target.classList.contains(
+      "card__like-button_is-active"
+    )
+      ? deleteLikeOnCard
+      : putLikeOnCard;
+    likeMethod(cardId)
+      .then((res) => {
+        cardLikes.textContent = res.likes.length;
+        toggleLikeCard(evt);
+      })
+      .catch((err) =>
+        console.log("Проблема постановки или снятия лайка: ", err)
+      );
   });
 
   let currentDeleteButton = null;
