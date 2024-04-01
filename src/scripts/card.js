@@ -7,6 +7,8 @@ import {
 import * as objects from "./index.js";
 import { openPopup, renderLoading, closePopup } from "./modal.js";
 
+let currentDeleteButton = null;
+
 // удаление карточки со страницы
 export function deleteCard(card) {
   card.remove();
@@ -17,13 +19,11 @@ export function toggleLikeCard(evt) {
   evt.target.classList.toggle("card__like-button_is-active");
 }
 
-function deleteCardFromServerAndPage(button, card_id) {
-  renderLoading(true);
+export function deleteCardFromServerAndPage(button, card_id) {
   deleteCardFromServer(card_id)
     .then(() => deleteCard(button.closest(".card")))
     .catch((err) => console.error("Проблема с удалением карточки: ", err))
     .finally(() => {
-      renderLoading(false);
       closePopup(objects.confirmPopup);
     });
 }
@@ -71,23 +71,12 @@ export function createCard(
       );
   });
 
-  let currentDeleteButton = null;
-
   deleteButton.addEventListener("click", (evt) => {
     currentDeleteButton = evt.target;
-    openPopup(objects.confirmPopup);
-
-    objects.popupConfirmButton.addEventListener("click", function () {
-      deleteCardFromServerAndPage(currentDeleteButton, cardId);
-    });
-
-    window.addEventListener("keydown", (evt) => {
-      if (evt.key === "Enter") {
-        evt.preventDefault();
-        deleteCardFromServerAndPage(currentDeleteButton, cardId);
-      }
-    });
+    deleteCardFromServerAndPage(currentDeleteButton, cardId);
   });
+
+  /* Удаление по попапу еще будет дорабатываться */
 
   likes.forEach((owner) => {
     if (owner._id === objects.userId)

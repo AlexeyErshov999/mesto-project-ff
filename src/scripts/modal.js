@@ -1,4 +1,4 @@
-import { popupConfirmButton, popupSaveButtons, submitter } from "./index.js";
+import * as data from "./index.js";
 
 export function openPopup(popup) {
   popup.classList.add("popup_is-animated");
@@ -20,9 +20,9 @@ export function closePopup() {
 export function renderLoading(isLoading) {
   if (isLoading) {
     // меняется текст кнопки, вызвавшей сабмит
-    submitter.textContent = "Сохранение...";
+    data.submitter.textContent = "Сохранение...";
   } else {
-    submitter.textContent = "Сохранить";
+    data.submitter.textContent = "Сохранить";
   }
 }
 

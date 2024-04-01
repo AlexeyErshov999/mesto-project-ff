@@ -1,6 +1,10 @@
 // подключение модулей и функций
 import "../pages/index.css"; // импорт главного файла стилей для webpack
-import { deleteCard, createCard, toggleLikeCard } from "./card.js";
+import {
+  deleteCard,
+  createCard,
+  toggleLikeCard,
+} from "./card.js";
 import { openPopup, closePopup, renderLoading } from "./modal.js";
 import {
   addNewCardToServer,
@@ -9,7 +13,10 @@ import {
   patchUsersInfo,
   updateAvatarOnServer,
 } from "./api.js";
-import { clearValidation, enableValidation, validationConfig } from "./validation.js";
+import {
+  clearValidation,
+  enableValidation,
+} from "./validation.js";
 
 // поиск объектов DOM
 export const cardsList = document.querySelector(".places__list");
@@ -31,7 +38,8 @@ export const profileDescription = document.querySelector(
 export const profileForm = document.forms["edit-profile"];
 export const profileFormName = profileForm.name;
 export const profileFormDescription = profileForm.description;
-export const profileFormSubmitButton = profileForm.querySelector('.popup__button');
+export const profileFormSubmitButton =
+  profileForm.querySelector(".popup__button");
 export const addCardForm = document.forms["new-place"];
 export const addCardFormName = addCardForm["place-name"];
 export const addCardFormLink = addCardForm.link;
@@ -50,6 +58,15 @@ export const confirmForm = document.forms["confirm-form"];
 
 export let userId = null; // Запоминаем id пользователя
 export let submitter = null;
+
+const validationConfiguration = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
 
 // проверяем что данные пользователя и массив карточек точно пришли
 Promise.all([getUsersInfo(), getInitialCards()])
@@ -154,11 +171,10 @@ function handleNewCardFormSubmit() {
 // слушатели
 // открытие/отправка формы профиля
 editButton.addEventListener("click", function () {
-  // clearValidation(profileForm, validationConfig);
+  clearValidation(profileForm, validationConfiguration);
   profileFormName.value = profileTitle.textContent;
   profileFormDescription.value = profileDescription.textContent;
   openPopup(editPopup);
-  console.log(editButton)
   editButton.disabled = false;
 });
 profileForm.addEventListener("submit", (evt) => {
@@ -170,7 +186,7 @@ profileForm.addEventListener("submit", (evt) => {
 
 // открытие/отправка формы создания карточки
 addButton.addEventListener("click", function () {
-  // clearValidation(addCardForm, validationConfig);
+  clearValidation(addCardForm, validationConfiguration);
   openPopup(addPopup);
 });
 addCardForm.addEventListener("submit", (evt) => {
@@ -181,7 +197,7 @@ addCardForm.addEventListener("submit", (evt) => {
 
 // открытие/отправка формы смены аватара
 profileImage.addEventListener("click", function () {
-  // clearValidation(avatarForm, validationConfig);
+  clearValidation(avatarForm, validationConfiguration);
   openPopup(avatarPopup);
 });
 avatarForm.addEventListener("submit", (evt) => {
@@ -201,4 +217,4 @@ popups.forEach((popup) => {
   });
 });
 
-enableValidation();
+enableValidation(validationConfiguration);

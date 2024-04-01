@@ -89,17 +89,3 @@ export function updateAvatarOnServer(avatarUrl) {
     }),
   }).then((res) => checkResponse(res));
 }
-
-// проверка url картинок
-// export function checkImageUrl(imageUrl) {
-//   return fetch(`${imageUrl}`, {
-//     method: "HEAD"
-//   })
-//     .then(res => {
-//       checkImageUrl(res);
-//     })
-//     .then(res => {
-//       console.log(res.status);
-//       console.log(res.headers.get('Content-Type'));
-//     })
-// }
